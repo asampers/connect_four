@@ -1,13 +1,24 @@
 class Game
 
-  attr_reader :board
+  attr_accessor :board
 
   def initialize
     @board = Array.new(6, Array.new(7))
     @current_player_id = 0
-    @players = [Player.new(self,"x", one_name()), Player.new(self, "+", two_name())]
-    puts "#{current_player} will go first."
+    #@players = [Player.new(self,"x", one_name()), Player.new(self, "+", two_name())]
+    #puts "#{current_player} will go first."
   end
+
+  def player_has_won?(player)
+
+  end
+
+  def row_full?(selection)
+    @board.each_with_index do |line, index|
+      return false if line[selection-1].nil?
+    end
+    true
+  end    
 
   def one_name 
     print "Please enter player one's name: "
@@ -24,6 +35,18 @@ class Game
 
   def current_player
     @players[@current_player_id]
+  end
+
+  def opponent
+    @players[other_player_id]
+  end
+
+  def other_player_id
+    1 - @current_player_id
+  end
+
+  def switch_players!
+    @current_player_id = other_player_id
   end
 
   def print_board
@@ -49,6 +72,6 @@ class Player
   end
 end
 
-game = Game.new
+#game = Game.new
 
-game.print_board
+#game.print_board
