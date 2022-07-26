@@ -40,6 +40,32 @@ describe Game do
     end    
   end
 
+  describe '#win_vertically?' do
+    subject(:vertical_game) { described_class.new }
+      
+    context 'when player has 4 pieces in a column' do
+      it 'returns true' do
+        vertical_game.board = [[nil, 'x', nil, nil, nil, nil, nil], 
+        ['x', 'x', 'x', 'x', nil, nil, 't'], 
+        [nil, 'x', nil, 'x', nil, nil, nil], 
+        [nil, 'x', nil, nil, nil, nil, nil]]
+        players = vertical_game.instance_variable_get(:@players)
+        expect(vertical_game.win_vertically?(players[0])).to eq(true)
+      end
+    end    
+
+    context 'when player does not have 4 pieces in a column' do
+      it 'returns false' do
+        vertical_game.board = [[nil, nil, 'x', nil, nil, nil, nil], 
+        ['x', nil, 'x', 'x', nil, nil, nil], 
+        ['x', nil, '+', nil, nil, nil, nil],
+        [nil, nil, 'x', nil, 'x', nil, nil]]
+        players = vertical_game.instance_variable_get(:@players)
+        expect(vertical_game.win_horizontally?(players[0])).to eq(false)
+      end
+    end    
+  end
+
   describe '#four_in_row' do
     subject(:game) { described_class.new }
 
