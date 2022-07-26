@@ -136,11 +136,21 @@ class Player
     @name = name
   end  
 
+  def select_column
+    @game.print_board
+    loop do 
+      print "Select a column to drop your piece into: "
+      selection = gets.to_i
+      return selection if @game.row_full?(selection) == false
+      puts "Column #{selection} is already full. Try again."
+    end  
+  end
+
   def to_s
     "#{@name}"
   end
 end
 
-game = Game.new
-p game.win_horizontally?(game.current_player)
+#game = Game.new
+#p game.win_horizontally?(game.current_player)
 #game.print_board
