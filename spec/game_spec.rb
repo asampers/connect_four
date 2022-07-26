@@ -13,7 +13,7 @@ describe Game do
 
     context 'when row has one piece' do
       it 'returns false' do
-        full_board.board = [["X", nil],['+',nil],[nil, 'o']]
+        full_board.board = [[nil, nil],[nil,nil],[nil, 'o']]
         selection = 2
         expect(full_board.row_full?(selection)).to eq(false)
       end
@@ -106,5 +106,21 @@ describe Game do
         expect(game.four_in_row(players[1])).to eq(["+", "+", "+", "+"])
       end  
     end 
-  end      
+  end 
+
+  describe '#let_gravity_place_it' do
+    subject(:gravity) { described_class.new }
+
+    context 'when player makes a legal column selection' do 
+      it 'places player piece in row above bottom piece in column' do
+        gravity.board = [[nil, nil, nil, nil, nil, nil, nil], 
+        ['x', nil, 'x', nil, nil, nil, nil], 
+        ['x', nil, '+', nil, 'x', nil, nil],
+        ['x', nil, 'x', 'x', 'x', 'x', nil]] 
+        num = 6
+        expect { gravity.let_gravity_place_it(num) }.to change { gravity.board[2][5] }.to eq('x')
+        
+      end 
+    end  
+  end  
 end 
