@@ -12,6 +12,7 @@ class Game
   def player_has_won?(player)
     return true if win_horizontally?(player)
     return true if win_vertically?(player)
+    return true if win_diagonally?(player)
     false
   end
 
@@ -38,8 +39,23 @@ class Game
     end
   end 
 
+  def win_diagonally?(player)
+    @board.each_with_index do |line, index|
+        line.each_index do |ind|
+          combo = move_diagonally(@board, index, ind)
+          return true if combo == four_in_row(player)
+        end
+      end
+    false  
+  end 
+
   def move_vertically(board, index, ind)
     [board[index][ind], board[index+1][ind], board[index+2][ind], board[index+3][ind]]
+  end
+
+  def move_diagonally(board, index, ind)
+    return if board[index+3].nil?
+    [board[index][ind], board[index+1][ind+1], board[index+2][ind+2], board[index+3][ind+3]]
   end
 
   def four_in_row(player)
