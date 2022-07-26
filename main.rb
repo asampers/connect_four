@@ -9,6 +9,14 @@ class Game
     #puts "#{current_player} will go first."
   end
 
+  def let_gravity_place_it(selection)
+    i = 0
+    while i < @board.length-1
+      @board[i][selection-1] = "x" if !@board[i+1][selection-1].nil?
+      i +=1
+    end  
+  end
+
   def player_has_won?(player)
     return true if win_horizontally?(player)
     return true if win_vertically?(player)
@@ -68,7 +76,17 @@ class Game
       return false if line[selection-1].nil?
     end
     true
-  end    
+  end   
+
+  def board_full?
+    @board.each do |line|
+      line.select! do |spot|
+        !spot.nil?
+      end 
+      return true if @board.flatten.count == 42
+    end 
+    false
+  end   
 
   def one_name 
     print "Please enter player one's name: "
