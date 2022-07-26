@@ -66,6 +66,32 @@ describe Game do
     end    
   end
 
+  describe '#win_diagonally?' do
+    subject(:diagonal_game) { described_class.new }
+      
+    context 'when player has 4 pieces in a diagonal' do
+      it 'returns true' do
+        diagonal_game.board = [['x', 'x', nil, nil, nil, nil, nil], 
+        ['x', 'x', 'x', 'x', nil, nil, 't'], 
+        [nil, 'x', 'x', 'x', nil, nil, nil], 
+        [nil, 'x', nil, 'x', nil, nil, nil]]
+        players = diagonal_game.instance_variable_get(:@players)
+        expect(diagonal_game.win_vertically?(players[0])).to eq(true)
+      end
+    end    
+
+    context 'when player does not have 4 pieces in a diagonal' do
+      it 'returns false' do
+        diagonal_game.board = [[nil, nil, 'x', nil, nil, nil, nil], 
+        ['x', nil, 'x', 'x', nil, nil, nil], 
+        ['x', nil, '+', nil, nil, nil, nil],
+        [nil, nil, 'x', nil, 'x', nil, nil]]
+        players = diagonal_game.instance_variable_get(:@players)
+        expect(diagonal_game.win_horizontally?(players[0])).to eq(false)
+      end
+    end    
+  end
+
   describe '#four_in_row' do
     subject(:game) { described_class.new }
 
