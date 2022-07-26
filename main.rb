@@ -5,12 +5,32 @@ class Game
   def initialize
     @board = Array.new(6, Array.new(7))
     @current_player_id = 0
-    #@players = [Player.new(self,"x", one_name()), Player.new(self, "+", two_name())]
+    @players = [Player.new(self,"x", one_name()), Player.new(self, "+", two_name())]
     #puts "#{current_player} will go first."
   end
 
   def player_has_won?(player)
+    return true if win_horizontally?(player)
 
+    false
+  end
+
+  def win_horizontally?(player)
+    @board.each_with_index do |line, index|
+      line.each_index do |ind|
+        if line[ind..ind+3] == four_in_row(player)
+          return true
+        end  
+        
+      end
+      
+    end
+    false
+  end 
+
+  def four_in_row(player)
+    piece = player.piece
+    combo = ["#{piece}", "#{piece}", "#{piece}", "#{piece}"]
   end
 
   def row_full?(selection)
@@ -60,6 +80,7 @@ end
 
 
 class Player
+  attr_reader :game, :piece, :name
 
   def initialize(game, piece, name)
     @game = game
@@ -72,6 +93,6 @@ class Player
   end
 end
 
-#game = Game.new
-
+game = Game.new
+p game.win_horizontally?(game.current_player)
 #game.print_board
