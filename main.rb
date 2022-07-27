@@ -3,16 +3,37 @@ class Game
   attr_accessor :board
 
   def initialize
-    @board = Array.new(6, Array.new(7))
+    @board = Array.new(6) { Array.new(7) }
     @current_player_id = 0
     @players = [Player.new(self,"x", one_name()), Player.new(self, "+", two_name())]
     #puts "#{current_player} will go first."
   end
 
-  def let_gravity_place_it(selection)
+  def play
+    loop do
+      let_gravity_place_it(current_player)
+
+      if player_has_won?(current_player)
+        puts "#{current_player} wins!"
+        print_board()
+        return
+      elsif board_full? 
+        puts "It's a draw."
+        print_board()
+        return
+      end 
+
+      switch_players!()
+    end        
+  end
+
+  def let_gravity_place_it(player)
+    selection = player.select_column
     i = 0
+    return @board[5][selection-1] = current_player.piece if @board[5][selection-1].nil?
     while i < @board.length-1
-      @board[i][selection-1] = "x" if !@board[i+1][selection-1].nil?
+      return @board[i][selection-1] = current_player.piece if !@board[i+1][selection-1].nil?
+      
       i +=1
     end  
   end
@@ -79,11 +100,12 @@ class Game
   end   
 
   def board_full?
+    count = 0
     @board.each do |line|
-      line.select! do |spot|
-        !spot.nil?
+      line.each do |spot|
+        count += 1 if !spot.nil?
       end 
-      return true if @board.flatten.count == 42
+      return true if count == 42
     end 
     false
   end   
@@ -120,7 +142,7 @@ class Game
   def print_board
     print "  1 2 3 4 5 6 7\n"
     @board.each_with_index do |line, index|
-      changed = line.map {|spot| spot.nil? ? "\u{26F6} " : spot }.join
+      changed = line.map {|spot| spot.nil? ? "\u{26F6} " : "#{spot} " }.join
       puts "#{index+1} #{changed}"
     end
   end
@@ -152,5 +174,11 @@ class Player
 end
 
 #game = Game.new
+Game.new.play
 #p game.win_horizontally?(game.current_player)
 #game.print_board
+#game.let_gravity_place_it(game.current_player)
+#game.print_board
+
+#game.print_board
+#p game.current_player.piece
