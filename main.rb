@@ -6,7 +6,7 @@ class Game
     @board = Array.new(6) { Array.new(7) }
     @current_player_id = 0
     @players = [Player.new(self,"x", one_name()), Player.new(self, "+", two_name())]
-    #puts "#{current_player} will go first."
+    puts "#{current_player} will go first."
   end
 
   def play
@@ -58,33 +58,38 @@ class Game
 
   def win_vertically?(player)
     @board.each_with_index do |line, index|
-      times = 0
       line.each_index do |ind|
         combo = move_vertically(@board, index, ind)
-        return true if combo == four_in_row(player)
-        times +=1
-        return false if times == 7  
+        return true if combo == four_in_row(player) 
       end
     end
+    false
   end 
 
   def win_diagonally?(player)
     @board.each_with_index do |line, index|
-        line.each_index do |ind|
-          combo = move_diagonally(@board, index, ind)
-          return true if combo == four_in_row(player)
-        end
+      line.each_index do |ind|
+        combo = move_down_diagonally(@board, index, ind)
+        combo2 = move_up_diagonally(@board, index, ind)
+        return true if combo == four_in_row(player) || combo2 == four_in_row(player)
       end
+    end
     false  
   end 
 
   def move_vertically(board, index, ind)
+    return if board[index+3].nil?
     [board[index][ind], board[index+1][ind], board[index+2][ind], board[index+3][ind]]
   end
 
-  def move_diagonally(board, index, ind)
+  def move_down_diagonally(board, index, ind)
     return if board[index+3].nil?
     [board[index][ind], board[index+1][ind+1], board[index+2][ind+2], board[index+3][ind+3]]
+  end
+
+  def move_up_diagonally(board, index, ind)
+    return if board[index-3].nil?
+    [board[index][ind], board[index-1][ind+1], board[index-2][ind+2], board[index-3][ind+3]]
   end
 
   def four_in_row(player)
@@ -161,10 +166,11 @@ class Player
   def select_column
     @game.print_board
     loop do 
-      print "Select a column to drop your piece into: "
+      print "#{@name}, select a column to drop your '#{@piece}' into: "
       selection = gets.to_i
-      return selection if @game.row_full?(selection) == false
-      puts "Column #{selection} is already full. Try again."
+      return selection if @game.row_full?(selection) == false && selection.between?(1, 7)
+      puts "Column #{selection} is already full. Try again." if @game.row_full?(selection)
+      puts "Please select a number between 1 - 7." if selection != [1..7]
     end  
   end
 
