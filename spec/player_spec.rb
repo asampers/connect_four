@@ -1,4 +1,5 @@
-require_relative '../main.rb'
+require_relative '../lib/game.rb'
+require_relative '../lib/player.rb'
 
 describe Player do
   describe '#select_column' do
