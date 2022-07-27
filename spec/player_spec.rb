@@ -35,7 +35,7 @@ describe Player do
         full_column = 3
         empty_column = 2
         error_message = "Column #{full_column} is already full. Try again."
-        expect(player).to receive(:puts).with(error_message)
+        expect(player).to receive(:puts).twice 
         player.select_column
       end 
     end     

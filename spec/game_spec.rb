@@ -112,14 +112,17 @@ describe Game do
     subject(:gravity) { described_class.new }
 
     context 'when player makes a legal column selection' do 
+      
+      before do
+        players = gravity.instance_variable_get(:@players)
+        allow(players[0]).to receive(:gets).and_return(6)
+      end 
+
       it 'places player piece in row above bottom piece in column' do
-        gravity.board = [[nil, nil, nil, nil, nil, nil, nil], 
-        ['x', nil, 'x', nil, nil, nil, nil], 
-        ['x', nil, '+', nil, 'x', nil, nil],
-        ['x', nil, 'x', 'x', 'x', 'x', nil]] 
-        num = 6
-        expect { gravity.let_gravity_place_it(num) }.to change { gravity.board[2][5] }.to eq('x')
-        
+        board = gravity.instance_variable_get(:@board)
+        players = gravity.instance_variable_get(:@players)
+        expect{ gravity.let_gravity_place_it(players[0]) }.to change { board }
+        gravity.let_gravity_place_it(players[0])
       end 
     end  
   end  
